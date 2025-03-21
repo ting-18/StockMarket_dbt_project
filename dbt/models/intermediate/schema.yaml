@@ -1,0 +1,31 @@
+version: 2
+
+models:
+    - name: int_stocksdata
+      description: >
+        10 years daily stock price data from Yahoo Finance API. 
+      columns:
+          - name: ticker 
+            description: > 
+                A symbol represents a stock.
+            tests:
+              - relationships:
+                  to: ref('sp500_stocks_info')
+                  field: ticker
+                  severity: warn                
+          - name: trade_date 
+            description: The date when stock is traded.
+          - name: volume 
+            description: The volume traded in that day.
+          - name: open_price
+            description: a stock's trade price when stock market open on that day.
+          - name: close_price
+            description: a stock's trade price when stock market close on that day.
+          - name: highest_price
+            description: a stock's highest trade price in that day. 
+          - name: lowest_price
+            description: a stock's lowest trade price in that day.
+
+
+          
+    
