@@ -25,9 +25,9 @@ models:
             description: The date when stock is traded.
           - name: volume 
             description: The volume traded in that day.
-          - name: open_price
+          - name: opening_price
             description: a stock's trade price when stock market open on that day.
-          - name: close_price
+          - name: closing_price
             description: a stock's trade price when stock market close on that day.
           - name: highest_price
             description: a stock's highest trade price in that day. 

@@ -31,8 +31,8 @@ select
     -- price info
     -- {{ dbt.safe_cast("passenger_count", api.Column.translate_type("integer")) }} as passenger_count,
     cast(volume as integer) as volume,
-    cast(open as numeric) as open_price,
-    cast(close as numeric) as close_price,
+    cast(open as numeric) as opening_price,
+    cast(close as numeric) as closing_price,
     cast(high as numeric) as highest_price,
     cast(low as numeric) as lowest_price,
 from stockdata
