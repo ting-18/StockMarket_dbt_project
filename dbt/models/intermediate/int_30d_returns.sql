@@ -1,21 +1,23 @@
 {{
     config(
-        materialized='table', 
-        partition_by={
-        "field": "ticker",
-        "data_type": "string"     
-        },
-        cluster_by=["trade_date"]          
+        materialized='table'       
     )
 }}
 
-WITH start_dates AS (
+
+WITH latest_date AS (
+    SELECT trade_date 
+    FROM {{ ref('stg_sp500_stockdata') }}
+    ORDER BY trade_date DESC 
+    LIMIT 1
+),
+start_dates AS (
     SELECT 
         ticker,
         MIN(trade_date) AS start_date        
     FROM {{ ref('stg_sp500_stockdata') }}
-    WHERE trade_date >= CURRENT_DATE - INTERVAL 30 DAY  -- Current year data
-    GROUP BY ticker  -- Current year data
+    WHERE trade_date >= (SELECT trade_date FROM latest_date) - INTERVAL 30 DAY  
+    GROUP BY ticker  
 ),
 start_prices AS (
     SELECT 
@@ -27,12 +29,11 @@ start_prices AS (
 )
 
 
-
 select 
     s.ticker,
     s.trade_date,    
     ROUND((s.closing_price - y.start_price) / y.start_price * 100, 2) as thirty_days_return
 from {{ ref('stg_sp500_stockdata') }} s
 join start_prices y on s.ticker = y.ticker
-where s.trade_date between CURRENT_DATE - INTERVAL 30 DAY and current_date
+where s.trade_date between (SELECT trade_date FROM latest_date) - INTERVAL 30 DAY and (SELECT trade_date FROM latest_date)
 
